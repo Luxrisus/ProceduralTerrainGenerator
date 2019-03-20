@@ -24,9 +24,8 @@ public class MeshGenerator : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        //StartCoroutine(CreateShape());
-        CreateShape();
-        
+        StartCoroutine(CreateShape());
+        //CreateShape();
     }
 
     private void Update()
@@ -34,10 +33,11 @@ public class MeshGenerator : MonoBehaviour
         UpdateMesh();
     }
 
-    //IEnumerator CreateShape()
-    void CreateShape()
+    IEnumerator CreateShape()
+    //void CreateShape()
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
+        colors = new Color[vertices.Length];
         for (int i = 0, z = 0 ; z <= zSize ; z++)
         {
             for (int x = 0 ; x <= xSize ; x++)
@@ -50,7 +50,11 @@ public class MeshGenerator : MonoBehaviour
                     maxTerrainHeight = y;
                 if (y < minTerrainHeight)
                     minTerrainHeight = y;
-
+                
+                //color
+                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
+                colors[i] = gradient.Evaluate(height);
+                
                 i++;
             }
         }
@@ -72,22 +76,22 @@ public class MeshGenerator : MonoBehaviour
                 vert++;
                 tris += 6;
 
-                //yield return new WaitForSeconds(.05f);
+                yield return new WaitForSeconds(.05f);
             }
             vert++;
         }
 
 
-        colors = new Color[vertices.Length];
-        for (int i = 0, z = 0; z <= zSize; z++)
-        {
-            for (int x = 0; x <= xSize; x++)
-            {
-                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
-                colors[i] = gradient.Evaluate(height);
-                i++;
-            }
-        }
+        //colors = new Color[vertices.Length];
+        //for (int i = 0, z = 0; z <= zSize; z++)
+        //{
+        //    for (int x = 0; x <= xSize; x++)
+        //    {
+        //        float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
+        //        colors[i] = gradient.Evaluate(height);
+        //        i++;
+        //    }
+        //}
        
     }
 
